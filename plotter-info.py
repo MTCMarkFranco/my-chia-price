@@ -1,10 +1,20 @@
 import PySimpleGUI as sg
 import shutil as sh
 import math
+import sys
 import os
 
+# Help
+if len(sys.argv) == 1:
+    print("*********************************************************")
+    print("Supply only your destination hard drive path to monitor\n")
+    print("example #1: python run-plotter.py /mnt/WD-8TB-1")
+    print("example #2: python run-plotter.py c:\\")
+    print("*********************************************************")
+    quit()
+
 # Inputs
-PLOT_DRIVE = "E:\\" # Turn this into an argument
+PLOT_DRIVE = sys.argv[1];
 
 # Initialize DISK Variables
 total, used, free = sh.disk_usage(PLOT_DRIVE)
