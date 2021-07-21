@@ -22,10 +22,10 @@ while True:
 
     # Initialize DISK Variables
     total, used, free = sh.disk_usage(PLOT_DRIVE)
-    DISK_TOTAL_GB = total // (2**30)
-    DISK_FREE_GB = free // (2**30)
+    DISK_TOTAL_GB = total // (1000 * 1000 * 1000)
+    DISK_FREE_GB = free // (1000 * 1000 * 1000)
     DISK_FREE_GB_PERCENTAGE = (DISK_FREE_GB / DISK_TOTAL_GB) * 100
-    DISK_USED_GB = used // (2**30)
+    DISK_USED_GB = used // (1000 * 1000 * 1000)
     DISK_USED_GB_PERCENTAGE = (DISK_USED_GB / DISK_TOTAL_GB) * 100
 
     # Initialize PLOT Variables
