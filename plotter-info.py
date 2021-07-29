@@ -18,6 +18,20 @@ if len(sys.argv) == 1:
 # Inputs
 PLOT_DRIVE = sys.argv[1];
 
+# Globals
+window = None;
+graph_plots = None;
+graph_disk = None;
+plots_rect_completed = None
+plots_rect_2_total = None
+plots_text_left = None
+plots_text_completed = None
+disk_rect_used = None
+disk_rect_free = None
+disk_text_free = None
+disk_text_used = None
+
+# Main
 while True:
 
     # Initialize DISK Variables
@@ -55,29 +69,44 @@ while True:
     PLOT_DATA_SIZE = (300,100)
     DISK_DATA_SIZE = (300,100)
 
-    # Window & Graph Setup
-    graph_plots = sg.Graph(GRAPH_SIZE, (0,0), PLOT_DATA_SIZE)
-    graph_disk = sg.Graph(GRAPH_SIZE, (0,0), DISK_DATA_SIZE)
-    layout = [[graph_plots],[graph_disk]]
-    window = sg.Window('Plotting Metrics', layout, finalize=True)
+    if window == None: 
+            
+            # Window & Graph Setup
+            graph_plots = sg.Graph(GRAPH_SIZE, (0,0), PLOT_DATA_SIZE, key='GRAPH-PLOT')
+            graph_disk = sg.Graph(GRAPH_SIZE, (0,0), DISK_DATA_SIZE, key='GRAPH-DISK')
+            layout = [[graph_plots],[graph_disk]]    
+            window = sg.Window('Plotting Metrics', layout, finalize=True)
+                   
+    else:
+            # Delete Plots Graph Data
+            graph_plots.delete_figure(plots_rect_completed)
+            graph_plots.delete_figure(plots_rect_2_total)
+            graph_plots.delete_figure(plots_text_left)
+            graph_plots.delete_figure(plots_text_completed)
 
-    # Setup Plots Graph
-    graph_plots.DrawRectangle(top_left=(0, PLOTS_COMPLETED_PERCENTAGE), bottom_right=(BAR_WIDTH, 0), fill_color='green')
-    graph_plots.DrawRectangle(top_left=(0, PLOTS_COMPLETED_PERCENTAGE + PLOTS_LEFT_PERCENTAGE), bottom_right=(BAR_WIDTH, PLOTS_COMPLETED_PERCENTAGE), fill_color='yellow')
+             # Delete Disk Graph Data
+            graph_disk.delete_figure(disk_rect_used)
+            graph_disk.delete_figure(disk_rect_free)
+            graph_disk.delete_figure(disk_text_free)
+            graph_disk.delete_figure(disk_text_used)
+            
+    # (Re)Create Plots Graph
+    plots_rect_completed = graph_plots.DrawRectangle(top_left=(0, PLOTS_COMPLETED_PERCENTAGE), bottom_right=(BAR_WIDTH, 0), fill_color='green')
+    plots_rect_2_total = graph_plots.DrawRectangle(top_left=(0, PLOTS_COMPLETED_PERCENTAGE + PLOTS_LEFT_PERCENTAGE), bottom_right=(BAR_WIDTH, PLOTS_COMPLETED_PERCENTAGE), fill_color='yellow')
     if PLOTS_COMPLETED_PERCENTAGE < 100.0:
-        graph_plots.DrawText(text=MSG_PLOTS_LEFT, location=(BAR_WIDTH /2, PLOTS_COMPLETED_PERCENTAGE + (PLOTS_LEFT_PERCENTAGE /2)))
-    graph_plots.DrawText(text=MSG_PLOTS_COMPLETE, location=(BAR_WIDTH / 2, PLOTS_COMPLETED_PERCENTAGE/2))
+        plots_text_left = graph_plots.DrawText(text=MSG_PLOTS_LEFT, location=(BAR_WIDTH /2, PLOTS_COMPLETED_PERCENTAGE + (PLOTS_LEFT_PERCENTAGE /2)))
+    if PLOTS_COMPLETED_PERCENTAGE != 0:
+        plots_text_completed = graph_plots.DrawText(text=MSG_PLOTS_COMPLETE, location=(BAR_WIDTH / 2, PLOTS_COMPLETED_PERCENTAGE/2))
 
-    # Setup Disk Graph
-    graph_disk.DrawRectangle(top_left=(0, DISK_USED_GB_PERCENTAGE), bottom_right=(BAR_WIDTH, 0), fill_color='green')
-    graph_disk.DrawRectangle(top_left=(0, DISK_USED_GB_PERCENTAGE + DISK_FREE_GB_PERCENTAGE), bottom_right=(BAR_WIDTH, DISK_USED_GB_PERCENTAGE), fill_color='yellow')
+    # (Re)Create Disk Graph
+    disk_rect_used = graph_disk.DrawRectangle(top_left=(0, DISK_USED_GB_PERCENTAGE), bottom_right=(BAR_WIDTH, 0), fill_color='green')
+    disk_rect_free = graph_disk.DrawRectangle(top_left=(0, DISK_USED_GB_PERCENTAGE + DISK_FREE_GB_PERCENTAGE), bottom_right=(BAR_WIDTH, DISK_USED_GB_PERCENTAGE), fill_color='yellow')
     if DISK_FREE_GB_PERCENTAGE != 0:
-        graph_disk.DrawText(text=MSG_DISK_FREE, location=(BAR_WIDTH /2, DISK_USED_GB_PERCENTAGE + (DISK_FREE_GB_PERCENTAGE /2)))
-    graph_disk.DrawText(text=MSG_DISK_USED, location=(BAR_WIDTH / 2, DISK_USED_GB_PERCENTAGE/2))
-
+        disk_text_free = graph_disk.DrawText(text=MSG_DISK_FREE, location=(BAR_WIDTH /2, DISK_USED_GB_PERCENTAGE + (DISK_FREE_GB_PERCENTAGE /2)))
+    if DISK_FREE_GB_PERCENTAGE != 100:
+        disk_text_used = graph_disk.DrawText(text=MSG_DISK_USED, location=(BAR_WIDTH / 2, DISK_USED_GB_PERCENTAGE/2))
 
     while True:
-        event, values = window.Read(60000)
-        window.Close()
+        event, values = window.Read(5000)
         break
     
