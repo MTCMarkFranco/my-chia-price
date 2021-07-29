@@ -1,1 +1,1 @@
-![image info](./plotting-metrics.jpg)
+![image info](./plotting-metrics.png)
