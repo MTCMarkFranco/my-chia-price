@@ -2,5 +2,5 @@
 
 Syntax:
 
-python3 plotter-info.py /mnt//<MOUNTED-DRIVE/>/
+python3 plotter-info.py /mnt/MOUNTED-DRIVE/
 
