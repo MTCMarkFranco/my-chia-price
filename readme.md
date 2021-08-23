@@ -2,9 +2,13 @@
 
 Syntax:
 
-python3 plotter-info.py /mnt/MOUNTED-DRIVE/
+python3 plotter-info.py -d /mnt/MOUNTED-DRIVE/ -k K32
 
-Note: Assumes K32 Plot sizes
+or
+
+python3 plotter-info.py --drive=e:\ --plot-size=K32
+
+Note: CLI Options now available to specifiy plot size for dynamic calculations
 
 Pre-reqs:
 

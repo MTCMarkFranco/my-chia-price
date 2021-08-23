@@ -1,22 +1,11 @@
+from enum import Enum
 from pickle import TRUE
 import PySimpleGUI as sg
 import shutil as sh
-import time
+import getopt
 import math
 import sys
 import os
-
-# Help
-if len(sys.argv) == 1:
-    print("*********************************************************")
-    print("Supply only your destination hard drive path to monitor\n")
-    print("example #1: python run-plotter.py /mnt/WD-8TB-1")
-    print("example #2: python run-plotter.py c:\\")
-    print("*********************************************************")
-    quit()
-
-# Inputs
-PLOT_DRIVE = sys.argv[1];
 
 # Globals
 window = None;
@@ -30,6 +19,33 @@ disk_rect_used = None
 disk_rect_free = None
 disk_text_free = None
 disk_text_used = None
+K_SIZE = {'K32': 110, 'K33': 225,'K34': 462, 'K35': 950}
+
+
+# CLI Processing...
+short_options = "hd:k:"
+long_options = ["help", "drive=", "plot-size="]
+full_cmd_arguments = sys.argv
+argument_list = full_cmd_arguments[1:]
+
+try:
+    arguments, values = getopt.getopt(argument_list, short_options, long_options)
+    for current_argument, current_value in arguments:
+        if current_argument in ("-d", "--drive"):
+            PLOT_DRIVE = current_value
+        elif current_argument in ("-h", "--help"):
+              print("*********************************************************")
+              print("example #1: python run-plotter.py -d /mnt/MOUNTED-DRIVE/ -k K32")
+              print("example #2: python run-plotter.py --drive=e:\ --plot-size=K32")
+              print("*********************************************************")
+        elif current_argument in ("-k", "--plot-size"):
+            PLOT_SIZE = current_value
+            PLOT_SIZE_GB = K_SIZE[PLOT_SIZE]
+
+except getopt.error as err:
+    print (str(err))
+    sys.exit(2)
+
 
 # Main
 while True:
@@ -43,7 +59,7 @@ while True:
     DISK_USED_GB_PERCENTAGE = (DISK_USED_GB / DISK_TOTAL_GB) * 100
 
     # Initialize PLOT Variables
-    TOTAL_PLOTS = math.floor(DISK_TOTAL_GB / 110)
+    TOTAL_PLOTS = math.floor(DISK_TOTAL_GB / PLOT_SIZE_GB)
     PLOTS_COMPLETED = 0
 
     for base, dirs, files in os.walk(PLOT_DRIVE):
@@ -63,11 +79,12 @@ while True:
     MSG_DISK_USED = "[Hard Drive] Used space: %dGB" % DISK_USED_GB
 
     # Constants
-    BAR_WIDTH = 300
+    WINDOW_SIZE = 360
+    BAR_WIDTH = WINDOW_SIZE
     GRAPH_DISKS_LEFT = BAR_WIDTH + 5
-    GRAPH_SIZE = (300,100)
-    PLOT_DATA_SIZE = (300,100)
-    DISK_DATA_SIZE = (300,100)
+    GRAPH_SIZE = (WINDOW_SIZE,100)
+    PLOT_DATA_SIZE = (WINDOW_SIZE,100)
+    DISK_DATA_SIZE = (WINDOW_SIZE,100)
 
     if window == None: 
             
@@ -75,7 +92,7 @@ while True:
             graph_plots = sg.Graph(GRAPH_SIZE, (0,0), PLOT_DATA_SIZE, key='GRAPH-PLOT')
             graph_disk = sg.Graph(GRAPH_SIZE, (0,0), DISK_DATA_SIZE, key='GRAPH-DISK')
             layout = [[graph_plots],[graph_disk]]    
-            window = sg.Window('Plotting Metrics', layout, finalize=True)
+            window = sg.Window('calculations using [' + PLOT_SIZE + '] plot size', layout, finalize=True)
                    
     else:
             # Delete Plots Graph Data
