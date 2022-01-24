@@ -1,14 +1,8 @@
-![image info](./plotting-metrics.png)
+![image info](./chia-metrics.png)
 
 Syntax:
 
-python3 plotter-info.py -d /mnt/MOUNTED-DRIVE/ -k K32
-
-or
-
-python3 plotter-info.py --drive=e:\ --plot-size=K32
-
-Note: CLI Options now available to specifiy plot size for dynamic calculations
+python3 chia-info.py
 
 Pre-reqs:
 
