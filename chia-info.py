@@ -28,12 +28,11 @@ while True:
         # Pull Info from WebService
         coins =requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address).json()
         coinValue =requests.get('https://xchscan.com/api/chia-price').json()
+        # Message Construction
+        MSG_COINS = "%.2f XCH" % coins['xch']
+        MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
     except getopt.error as err:
         print (str(err))
-
-    # Message Construction
-    MSG_COINS = "%.2f XCH" % coins['xch']
-    MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
 
     # Constants
     WINDOW_SIZE = 360
