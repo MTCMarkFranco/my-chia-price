@@ -32,7 +32,7 @@ while True:
         print (str(err))
 
     # Message Construction
-    MSG_COINS = "%.1f XCH" % coins['xch']
+    MSG_COINS = "%.2f XCH" % coins['xch']
     MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
 
     # Constants
