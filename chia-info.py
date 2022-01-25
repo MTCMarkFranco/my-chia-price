@@ -4,9 +4,6 @@ import PySimpleGUI as sg
 import shutil as sh
 import requests
 import getopt
-import math
-import sys
-import os
 
 # Parameters TODO: Please replace the address below with your own Chia Receive address
 wallet_address = 'xch1ympws6g96jkwwl6t3qvl7klz8k9nlrru9htux7ulq6a3ha8surnqndcaxl';
@@ -19,13 +16,20 @@ coins_rect = None;
 coins_text = None;
 value_rect = None;
 value_text = None;
+i = 0;
 
 # Main
 while True:
   
-    # Pull Info from WebService
-    coins =requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address).json()
-    coinValue =requests.get('https://xchscan.com/api/chia-price').json()
+    coins = 0;
+    coinValue = 0;
+
+    try:
+        # Pull Info from WebService
+        coins =requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address).json()
+        coinValue =requests.get('https://xchscan.com/api/chia-price').json()
+    except getopt.error as err:
+        print (str(err))
 
     # Message Construction
     MSG_COINS = "%.1f XCH" % coins['xch']
@@ -63,8 +67,8 @@ while True:
     # (Re)Create Value Graph
     value_rect = graph_value.DrawRectangle(top_left=(0, 100), bottom_right=(BAR_WIDTH, 0), fill_color='#ff8000')
     value_text = graph_value.DrawText(font=FONT,text=MSG_VALUE, location=(BAR_WIDTH / 2, 100/2))
-    
+
     while True:
-        event, values = window.Read(5000)
+        event, values = window.Read(20000)
         break
     
