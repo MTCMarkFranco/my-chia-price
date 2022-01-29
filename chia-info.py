@@ -16,8 +16,9 @@ coins_rect = None;
 coins_text = None;
 value_rect = None;
 value_text = None;
-MSG_COINS = 0.0;
-MSG_VALUE = 0.0;
+MSG_COINS = 0.00;
+MSG_VALUE = 0.00;
+CHIA_PRICE = 0.00;
 
 # Main
 while True:
@@ -32,6 +33,7 @@ while True:
         # Message Construction
         MSG_COINS = "%.2f XCH" % coins['xch']
         MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
+        CHIA_PRICE = "$%.2f USD" % float(coinValue['usd'])
     except requests.exceptions.RequestException as e:
         continue
     except:
@@ -52,7 +54,7 @@ while True:
             graph_coins = sg.Graph(GRAPH_SIZE, (0,0), PLOT_DATA_SIZE, key='GRAPH-COINS')
             graph_value = sg.Graph(GRAPH_SIZE, (0,0), DISK_DATA_SIZE, key='GRAPH-VALUE')
             layout = [[graph_coins],[graph_value]]    
-            window = sg.Window('My Chia value from: https://xchscan.com', layout, finalize=True)
+            window = sg.Window('Current Chia Price: %s' % CHIA_PRICE, layout, finalize=True)
                    
     else:
             # Delete Coins Graph Data
