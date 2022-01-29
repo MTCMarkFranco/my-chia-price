@@ -16,7 +16,8 @@ coins_rect = None;
 coins_text = None;
 value_rect = None;
 value_text = None;
-i = 0;
+MSG_COINS = 0.0;
+MSG_VALUE = 0.0;
 
 # Main
 while True:
@@ -31,9 +32,11 @@ while True:
         # Message Construction
         MSG_COINS = "%.2f XCH" % coins['xch']
         MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
-    except getopt.error as err:
-        print (str(err))
-
+    except requests.exceptions.RequestException as e:
+        continue
+    except:
+        continue
+    
     # Constants
     WINDOW_SIZE = 360
     BAR_WIDTH = WINDOW_SIZE
