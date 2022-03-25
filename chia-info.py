@@ -1,9 +1,12 @@
 from enum import Enum
+from logging import exception
 from pickle import TRUE
+from time import sleep
 import PySimpleGUI as sg
 import shutil as sh
 import requests
 import getopt
+import json
 
 # Parameters TODO: Please replace the address below with your own Chia Receive address
 wallet_address = 'xch1ympws6g96jkwwl6t3qvl7klz8k9nlrru9htux7ulq6a3ha8surnqndcaxl';
@@ -37,13 +40,22 @@ while True:
         # Pull Info from WebService
         coins =requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address).json()
         coinValue =requests.get('https://xchscan.com/api/chia-price').json()
+
+        if not ((type(coins) == float) and (type(coins) == float)):
+            print("XCHSCAN[Chia Wallet] Returned: " + json.dumps(coins));
+            print("XCHSCAN[Chia Price] Returned" + json.dumps(coinValue));
+            sleep(1);
+            continue;
+
         # Message Construction
         MSG_COINS = "%.2f XCH" % coins['xch']
         MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
         MSG_PRICE = "Current Price: $%.2f USD" % float(coinValue['usd'])
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException as rex:
+        print(rex)
         continue
-    except:
+    except BaseException as ex:
+        print(ex)
         continue
 
     if window == None: 
