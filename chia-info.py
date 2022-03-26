@@ -7,6 +7,7 @@ import shutil as sh
 import requests
 import getopt
 import json
+import datetime
 
 # Parameters TODO: Please replace the address below with your own Chia Receive address
 wallet_address = 'xch1ympws6g96jkwwl6t3qvl7klz8k9nlrru9htux7ulq6a3ha8surnqndcaxl';
@@ -42,8 +43,10 @@ while True:
         coinValue =requests.get('https://xchscan.com/api/chia-price').json()
 
         if not ((type(coins) == float) and (type(coins) == float)):
-            print("XCHSCAN[Chia Wallet] Returned: " + json.dumps(coins));
-            print("XCHSCAN[Chia Price] Returned" + json.dumps(coinValue));
+            dt = datetime.datetime.now();
+            timestamp = '%s-%s-%s' % (dt.hour, dt.minute, dt.second)
+            print('[%s]' % timestamp + " - XCHSCAN(Chia Wallet) Returned: " + json.dumps(coins));
+            print('[%s]' % timestamp + " - XCHSCAN(Chia Price) Returned" + json.dumps(coinValue));
             sleep(1);
             continue;
 
