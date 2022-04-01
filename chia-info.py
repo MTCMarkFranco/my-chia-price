@@ -56,7 +56,7 @@ while True:
         print('[%s]' % timestamp + " - XCHSCAN Error: " + ex.msg);
     finally:
         print('[%s]' % timestamp + " - Waiting 20 Minutes until we hit the service again...");
-        sleep(12000);
+        sleep(1200);
         continue;
             
     if window == None: 
