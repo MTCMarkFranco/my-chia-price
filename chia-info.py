@@ -39,9 +39,17 @@ while True:
 
     try:
         # Pull Info from WebService
-        coins =requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address).json()
-        coinValue =requests.get('https://xchscan.com/api/chia-price').json()
+        coinsResponse = requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address)
+        coinValueResponse = requests.get('https://xchscan.com/api/chia-price')        
 
+        if (coinsResponse.status_code != 200):
+            raise Exception('Server Error: [%s]' % coinsResponse.status_code);
+        if (coinValueResponse.status_code != 200):
+            raise Exception('Server Error: [%s]' % coinValueResponse.status_code);
+
+        coinValue = coinValueResponse.json()
+        coins = coinsResponse.json()
+        
         if not ((type(coins['xch']) == float) and (type(coinValue['usd']) == float)):
             raise Exception("Unexpected data from XCHSCAN"); 
 
@@ -49,6 +57,8 @@ while True:
         MSG_COINS = "%.2f XCH" % coins['xch']
         MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
         MSG_PRICE = "Current Price: $%.2f USD" % float(coinValue['usd'])
+
+        print('[%s]' % timestamp + " - Got new values, Passing off to the UI...");
     
     except Exception as ex:
         dt = datetime.datetime.now();
