@@ -38,6 +38,10 @@ while True:
     coinValue = 0;
 
     try:
+        # Initializers
+        dt = datetime.datetime.now();
+        timestamp = '%s-%s-%s' % (dt.hour, dt.minute, dt.second);
+                
         # Pull Info from WebService
         coinsResponse = requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address)
         coinValueResponse = requests.get('https://xchscan.com/api/chia-price')        
@@ -61,9 +65,7 @@ while True:
         print('[%s]' % timestamp + " - Got new values, Passing off to the UI...");
     
     except Exception as ex:
-        dt = datetime.datetime.now();
-        timestamp = '%s-%s-%s' % (dt.hour, dt.minute, dt.second);
-        print('[%s]' % timestamp + " - XCHSCAN Error: " + ex.msg);
+        print('[%s]' % timestamp + " - XCHSCAN Error: " + ex);
         print('[%s]' % timestamp + " - Waiting 20 Minutes until we hit the service again...");
         sleep(1200);
         continue;
