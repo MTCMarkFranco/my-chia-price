@@ -54,7 +54,7 @@ while True:
         coinValue = coinValueResponse.json()
         coins = coinsResponse.json()
         
-        if not ((type(coins['xch']) == float) and (type(coinValue['usd']) == float)):
+        if not ((type(coins['xch']) == int or float) and (type(coinValue['usd']) == int or float)):
             raise Exception("Unexpected data from XCHSCAN"); 
 
         # Message Construction
