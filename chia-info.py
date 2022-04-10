@@ -42,7 +42,7 @@ while True:
         coins =requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address).json()
         coinValue =requests.get('https://xchscan.com/api/chia-price').json()
 
-        if not ((type(coins) == float) and (type(coins) == float)):
+        if not ((type(coins['xch']) == float) and (type(coinValue['usd']) == float)):
             raise Exception("Unexpected data from XCHSCAN"); 
 
         # Message Construction
@@ -54,11 +54,10 @@ while True:
         dt = datetime.datetime.now();
         timestamp = '%s-%s-%s' % (dt.hour, dt.minute, dt.second);
         print('[%s]' % timestamp + " - XCHSCAN Error: " + ex.msg);
-    finally:
         print('[%s]' % timestamp + " - Waiting 20 Minutes until we hit the service again...");
         sleep(1200);
         continue;
-            
+                
     if window == None: 
             
             # Window & Graph Setup
