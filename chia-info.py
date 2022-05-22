@@ -65,7 +65,7 @@ while True:
         print('[%s]' % timestamp + " - Got new values, Passing off to the UI...");
     
     except Exception as ex:
-        print('[%s]' % timestamp + " - XCHSCAN Error: " + repr(ex);
+        print('[%s]' % timestamp + " - XCHSCAN Error: " + repr(ex));
         print('[%s]' % timestamp + " - Waiting 20 Minutes until we hit the service again...");
         sleep(1200);
         continue;
