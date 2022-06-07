@@ -38,29 +38,38 @@ while True:
     coinValue = 0;
 
     try:
+        # Initializers
+        dt = datetime.datetime.now();
+        timestamp = '%s-%s-%s' % (dt.hour, dt.minute, dt.second);
+                
         # Pull Info from WebService
-        coins =requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address).json()
-        coinValue =requests.get('https://xchscan.com/api/chia-price').json()
+        coinsResponse = requests.get('https://xchscan.com/api/account/balance?address=%s' % wallet_address)
+        coinValueResponse = requests.get('https://xchscan.com/api/chia-price')        
 
-        if not ((type(coins) == float) and (type(coins) == float)):
-            dt = datetime.datetime.now();
-            timestamp = '%s-%s-%s' % (dt.hour, dt.minute, dt.second)
-            print('[%s]' % timestamp + " - XCHSCAN(Chia Wallet) Returned: " + json.dumps(coins));
-            print('[%s]' % timestamp + " - XCHSCAN(Chia Price) Returned" + json.dumps(coinValue));
-            sleep(1);
-            continue;
+        if (coinsResponse.status_code != 200):
+            raise Exception('Server Error: [%s]' % coinsResponse.status_code);
+        if (coinValueResponse.status_code != 200):
+            raise Exception('Server Error: [%s]' % coinValueResponse.status_code);
+
+        coinValue = coinValueResponse.json()
+        coins = coinsResponse.json()
+        
+        if not ((type(coins['xch']) == int or float) and (type(coinValue['usd']) == int or float)):
+            raise Exception("Unexpected data from XCHSCAN"); 
 
         # Message Construction
         MSG_COINS = "%.2f XCH" % coins['xch']
         MSG_VALUE = "$%.2f USD" % float((coinValue['usd'] * coins['xch']))
         MSG_PRICE = "Current Price: $%.2f USD" % float(coinValue['usd'])
-    except requests.exceptions.RequestException as rex:
-        print(rex)
-        continue
-    except BaseException as ex:
-        print(ex)
-        continue
 
+        print('[%s]' % timestamp + " - Got new values, Passing off to the UI...");
+    
+    except Exception as ex:
+        print('[%s]' % timestamp + " - XCHSCAN Error: " + repr(ex));
+        print('[%s]' % timestamp + " - Waiting 20 Minutes until we hit the service again...");
+        sleep(1200);
+        continue;
+                
     if window == None: 
             
             # Window & Graph Setup
